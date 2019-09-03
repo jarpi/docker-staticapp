@@ -26,6 +26,13 @@ app.use('/__', serveEnvs());
 
 app.use(serveStatic(dir));
 
+app.get('*',(req, res, next) =>{
+  const file = __dirname+'/json'+req.path+'.json';
+  console.dir(file)
+  res.setHeader('Content-Type', 'application/json');
+  return res.send(fs.readFileSync(file));
+});
+
 app.listen(port, function() {
 	console.log('Serving files from '+dir+' on port '+port+'.');
 });
