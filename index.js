@@ -24,13 +24,19 @@ function serveEnvs() {
 
 app.use('/__', serveEnvs());
 
-app.use(serveStatic(dir));
-
-app.get('*',(req, res, next) =>{
-  const file = __dirname+'/json'+req.path+'.json';
+app.get('/api/:obj',(req, res, next) =>{
+  console.dir(req.path)
+  const file = __dirname+'/json/'+req.params.obj+'.json';
   console.dir(file)
   res.setHeader('Content-Type', 'application/json');
   return res.send(fs.readFileSync(file));
+});
+
+app.use(serveStatic(dir));
+
+app.use('*', (req, res) => {
+  res.setHeader('Content-Type', 'text/html');
+  fs.createReadStream(__dirname+'/public/index.html').pipe(res);
 });
 
 app.listen(port, function() {
